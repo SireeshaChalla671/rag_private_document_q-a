@@ -1,0 +1,3 @@
+# Install alongside requirements.txt to run the test suite and evaluation harness.
+#   pip install -r requirements.txt -r requirements-dev.txt
+pytest>=8.0

@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+rag_env/
+env/
+
+# Environment variables / API keys
+.env
+.env.*
+!.env.example
+
+# Project data (regenerated locally, should never be committed)
+chroma_db/
+chroma_db_backup_*/
+temp_uploads/
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Personal notes (local paths, not for the repo)
+comments.txt

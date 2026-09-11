@@ -1,0 +1,82 @@
+{
+  "_comment": "Ground-truth eval set for sample_docs/sample_return_policy.pdf. expected_keywords are checked case-insensitively against the generated answer (ANY-of per group is not required — ALL groups should ideally be hit; coverage is reported as a fraction, not pass/fail, since exact LLM phrasing varies). expected_source is checked against the filenames of retrieved chunks for retrieval-metric scoring (hit rate / MRR).",
+  "cases": [
+    {
+      "id": "q1_exact_number_general_window",
+      "category": "exact_fact",
+      "question": "What is the return window for most items?",
+      "expected_keywords": ["10 days"],
+      "expected_source": "sample_return_policy.pdf",
+      "note": "Tests whether an exact number survives retrieval+generation. BM25 should help here since '10 days' is a literal token."
+    },
+    {
+      "id": "q2_exact_number_electronics",
+      "category": "exact_fact",
+      "question": "How many days do I have to return a laptop?",
+      "expected_keywords": ["7 days"],
+      "expected_source": "sample_return_policy.pdf",
+      "note": "Requires distinguishing the electronics-specific window (7 days) from the general one (10 days) - a common RAG failure mode is answering with the wrong number from a nearby sentence."
+    },
+    {
+      "id": "q3_paraphrase_refund_timeline",
+      "category": "semantic_paraphrase",
+      "question": "How long does it take to get my money back after returning something?",
+      "expected_keywords": ["5-7 business days", "inspected"],
+      "expected_source": "sample_return_policy.pdf",
+      "note": "No literal keyword overlap with the source phrasing ('refunds are processed within') - tests semantic/vector retrieval, not just BM25."
+    },
+    {
+      "id": "q4_personal_plus_general",
+      "category": "personal_plus_general",
+      "question": "It's been 5 days since I returned my item, when will I get my refund?",
+      "expected_keywords": ["5-7 business days"],
+      "expected_source": "sample_return_policy.pdf",
+      "note": "Mirrors the worked example in the QA prompt: the model must not refuse just because 'my item' isn't in the docs - it should answer the general refund-timeline policy."
+    },
+    {
+      "id": "q5_damaged_item_deadline",
+      "category": "exact_fact",
+      "question": "How soon do I need to report a damaged or defective item?",
+      "expected_keywords": ["48 hours"],
+      "expected_source": "sample_return_policy.pdf"
+    },
+    {
+      "id": "q6_non_refundable_items",
+      "category": "list_extraction",
+      "question": "What items are not eligible for a refund?",
+      "expected_keywords": ["gift card", "software", "perishable"],
+      "expected_source": "sample_return_policy.pdf",
+      "note": "Tests whether the model lists multiple items from an enumerated clause rather than picking just one."
+    },
+    {
+      "id": "q7_cod_refund_method",
+      "category": "exact_fact",
+      "question": "If I paid cash on delivery, how do I get refunded?",
+      "expected_keywords": ["bank transfer"],
+      "expected_source": "sample_return_policy.pdf"
+    },
+    {
+      "id": "q8_escalation_path",
+      "category": "exact_fact",
+      "question": "What can I do if my refund hasn't arrived after 10 business days of approval?",
+      "expected_keywords": ["escalate", "Consumer"],
+      "expected_source": "sample_return_policy.pdf"
+    },
+    {
+      "id": "q9_out_of_scope_should_refuse",
+      "category": "refusal",
+      "question": "What is ShopMart's CEO's name?",
+      "expected_keywords": ["cannot find"],
+      "expected_source": null,
+      "note": "Negative test: nothing in the document answers this. The model should say it can't find the information, not hallucinate a name."
+    },
+    {
+      "id": "q10_multihop_electronics_warranty",
+      "category": "multi_hop",
+      "question": "My laptop broke after the return window closed, what are my options?",
+      "expected_keywords": ["manufacturer", "warranty"],
+      "expected_source": "sample_return_policy.pdf",
+      "note": "Requires connecting the return-window clause with the separate warranty clause - tests whether retrieval pulls back both relevant chunks."
+    }
+  ]
+}
